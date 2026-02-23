@@ -8,6 +8,12 @@ Para instruções de build/execução, veja:
 
 - [`radar-clojure/README.md`](radar-clojure/README.md)
 
+### Rodar online (GitHub Pages)
+
+Após habilitar o GitHub Pages para este repositório (usando **GitHub Actions**), a URL fica:
+
+- `https://italomonteiro-nubank.github.io/cursor-radar-chart-wm/`
+
 ## Radar Chart — Clojure (backend) + ClojureScript (frontend)
 
 Este repositório contém uma aplicação que renderiza um **gráfico de radar** (5 dimensões) com **controle interativo** via sliders.
