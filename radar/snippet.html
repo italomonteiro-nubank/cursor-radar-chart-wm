@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Radar Chart (Chart.js) — Figma</title>
+    <style>
+      :root {
+        --color-background-default: #ffffff;
+        --color-surface-subtle: #efefef;
+        --color-surface-subtle-on-subtle: #e1e1e1;
+        --color-content-subtle: rgba(0, 0, 0, 0.64);
+        --color-border-default: #1f023014;
+        --color-border-accent-primary: #820ad1;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        background: var(--color-background-default);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      .frame {
+        position: relative;
+        width: 375px;
+        height: 277px;
+        background: var(--color-background-default);
+      }
+
+      .label {
+        position: absolute;
+        font-family: Graphik, sans-serif;
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 1.3;
+        color: var(--color-content-subtle);
+        white-space: nowrap;
+        font-feature-settings: "lnum", "tnum";
+      }
+
+      .chartCanvas {
+        position: absolute;
+        left: 67px;
+        top: 29px;
+        width: 240px;
+        height: 240px;
+      }
+
+      .controls {
+        width: 375px;
+        margin-top: 24px;
+        padding: 16px;
+        background: var(--color-background-default);
+        border-radius: 12px;
+        box-sizing: border-box;
+      }
+
+      .controlRow {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .controlRow:last-child {
+        margin-bottom: 0;
+      }
+
+      .controlLabel {
+        font-family: Graphik, sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.3;
+        color: rgba(0, 0, 0, 0.88);
+      }
+
+      .controlValue {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+          monospace;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.64);
+        min-width: 28px;
+        text-align: right;
+      }
+
+      .controlRange {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame" data-node-id="1324:17002">
+      <div
+        class="label"
+        style="right: 62px; top: 111.5px; transform: translate(100%, -50%)"
+      >
+        Liquidez
+      </div>
+      <div class="label" style="left: 16px; top: 111.5px; transform: translate(0, -50%)">
+        Proteção
+      </div>
+      <div
+        class="label"
+        style="left: calc(50% - 36.5px); top: 10.5px; transform: translate(0, -50%)"
+      >
+        Diversificação
+      </div>
+      <div class="label" style="left: 82px; top: 266.5px; transform: translate(0, -50%)">
+        Eficiência
+      </div>
+      <div class="label" style="left: 236px; top: 266.5px; transform: translate(0, -50%)">
+        Retorno
+      </div>
+
+      <canvas class="chartCanvas" id="radar" width="240" height="240"></canvas>
+    </div>
+
+    <div class="controls" aria-label="Controladores do gráfico de radar">
+      <div class="controlRow">
+        <div class="controlLabel">Diversificação</div>
+        <div class="controlValue" id="value-diversificacao">50</div>
+        <input
+          class="controlRange"
+          id="slider-diversificacao"
+          type="range"
+          min="1"
+          max="100"
+          step="1"
+          value="50"
+        />
+      </div>
+
+      <div class="controlRow">
+        <div class="controlLabel">Liquidez</div>
+        <div class="controlValue" id="value-liquidez">50</div>
+        <input
+          class="controlRange"
+          id="slider-liquidez"
+          type="range"
+          min="1"
+          max="100"
+          step="1"
+          value="50"
+        />
+      </div>
+
+      <div class="controlRow">
+        <div class="controlLabel">Retorno</div>
+        <div class="controlValue" id="value-retorno">50</div>
+        <input
+          class="controlRange"
+          id="slider-retorno"
+          type="range"
+          min="1"
+          max="100"
+          step="1"
+          value="50"
+        />
+      </div>
+
+      <div class="controlRow">
+        <div class="controlLabel">Eficiência</div>
+        <div class="controlValue" id="value-eficiencia">50</div>
+        <input
+          class="controlRange"
+          id="slider-eficiencia"
+          type="range"
+          min="1"
+          max="100"
+          step="1"
+          value="50"
+        />
+      </div>
+
+      <div class="controlRow">
+        <div class="controlLabel">Proteção</div>
+        <div class="controlValue" id="value-protecao">50</div>
+        <input
+          class="controlRange"
+          id="slider-protecao"
+          type="range"
+          min="1"
+          max="100"
+          step="1"
+          value="50"
+        />
+      </div>
+    </div>
+
+    <!-- Chart.js (UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+
+    <!-- Nosso renderer (CDN) -->
+    <script type="module">
+      import { renderRadarChart } from "./radarChart.cdn.js";
+
+      const tokens = {
+        radar: {
+          baseFill: getComputedStyle(document.documentElement).getPropertyValue("--color-surface-subtle").trim(),
+          baseStrokeColor: getComputedStyle(document.documentElement).getPropertyValue("--color-surface-subtle-on-subtle").trim(),
+          angleLineColor: getComputedStyle(document.documentElement).getPropertyValue("--color-border-default").trim(),
+          seriesBorderColor: getComputedStyle(document.documentElement).getPropertyValue("--color-border-accent-primary").trim(),
+          seriesFillColor: "rgba(130,10,209,0.4)",
+          seriesBorderWidthPx: 3.77356,
+          seriesBorderJoin: "round",
+        },
+      };
+
+      const scores = {
+        diversificacao: 50,
+        liquidez: 50,
+        retorno: 50,
+        eficiencia: 50,
+        protecao: 50,
+      };
+
+      const canvas = document.getElementById("radar");
+      const chart = renderRadarChart(canvas, scores, { tokens });
+
+      function normalizeScore(v) {
+        const n = Number(v);
+        return ((n - 1) * 100) / 99;
+      }
+
+      function syncChart() {
+        const ordered = [
+          scores.diversificacao,
+          scores.liquidez,
+          scores.retorno,
+          scores.eficiencia,
+          scores.protecao,
+        ];
+        chart.data.datasets[0].data = ordered.map(normalizeScore);
+        chart.update("none");
+      }
+
+      function bindSlider(key) {
+        const slider = document.getElementById(`slider-${key}`);
+        const valueEl = document.getElementById(`value-${key}`);
+        const handler = () => {
+          const v = Number(slider.value);
+          scores[key] = v;
+          valueEl.textContent = String(v);
+          syncChart();
+        };
+        slider.addEventListener("input", handler);
+        handler();
+      }
+
+      bindSlider("diversificacao");
+      bindSlider("liquidez");
+      bindSlider("retorno");
+      bindSlider("eficiencia");
+      bindSlider("protecao");
+    </script>
+  </body>
+</html>
+
