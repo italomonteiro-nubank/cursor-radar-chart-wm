@@ -1,4 +1,4 @@
-## cursor-radar-chart-wm
+## inv-design-radar-chart-wealth-manager
 
 O projeto (Clojure backend + ClojureScript frontend) está dentro da pasta:
 
@@ -12,7 +12,7 @@ Para instruções de build/execução, veja:
 
 Após habilitar o GitHub Pages para este repositório (usando **GitHub Actions**), a URL fica:
 
-- `https://italomonteiro-nubank.github.io/cursor-radar-chart-wm/`
+- `https://italomonteiro-nubank.github.io/inv-design-radar-chart-wealth-manager/`
 
 ## Radar Chart — Clojure (backend) + ClojureScript (frontend)
 
@@ -43,14 +43,14 @@ Em resumo: **server + UI + lógica estão em Clojure/ClojureScript**, e o Chart.
 Gera o bundle em `resources/public/js/main.js`.
 
 ```bash
-cd /Users/italo.monteiro/Documents/cursor-radar-chart
+cd radar-clojure
 clojure -M:shadow compile app
 ```
 
 ### 2) Subir o servidor (Clojure)
 
 ```bash
-cd /Users/italo.monteiro/Documents/cursor-radar-chart
+cd radar-clojure
 clojure -M:server
 ```
 
