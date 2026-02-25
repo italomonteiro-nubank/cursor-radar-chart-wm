@@ -12,6 +12,19 @@ body {
   padding: 24px;
   background: var(--color-background-default);
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .frame {
@@ -43,10 +56,33 @@ body {
 .controls {
   width: 375px;
   margin-top: 24px;
-  padding: 16px;
+  padding: 16px 24px;
   background: var(--color-background-default);
   border-radius: 12px;
   box-sizing: border-box;
+}
+
+.controlsHeader {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 24px;
+}
+
+.refreshButton {
+  appearance: none;
+  border: 1px solid var(--color-border-accent-primary);
+  background: var(--color-border-accent-primary);
+  color: #ffffff;
+  border-radius: 100px;
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.refreshButton:active {
+  transform: translateY(1px);
 }
 
 .controlRow {

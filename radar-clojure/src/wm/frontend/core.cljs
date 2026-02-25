@@ -11,12 +11,18 @@
            :seriesBorderWidthPx 3.77356
            :seriesBorderJoin "round"}})
 
+(defn rand-score []
+  (+ 20 (rand-int 81)))
+
+(defn random-scores []
+  {:diversificacao (rand-score)
+   :liquidez (rand-score)
+   :retorno (rand-score)
+   :eficiencia (rand-score)
+   :protecao (rand-score)})
+
 (defonce state*
-  (atom {:scores {:diversificacao 50
-                  :liquidez 50
-                  :retorno 50
-                  :eficiencia 50
-                  :protecao 50}
+  (atom {:scores (random-scores)
          :chart nil}))
 
 (def chartjs-urls
@@ -278,6 +284,18 @@
 
     (let [controls (el "div" "controls")]
       (.setAttribute controls "aria-label" "Controladores do gráfico de radar")
+      (let [header (el "div" "controlsHeader")
+            refresh-btn (el "button" "refreshButton")]
+        (.setAttribute refresh-btn "type" "button")
+        (.setAttribute refresh-btn "aria-label" "Atualizar página")
+        (set! (.-textContent refresh-btn) "Atualizar")
+        (.addEventListener
+          refresh-btn
+          "click"
+          (fn [_]
+            (.reload (.-location js/window))))
+        (.appendChild header refresh-btn)
+        (.appendChild controls header))
       (.appendChild controls (slider-row! :diversificacao "Diversificação"))
       (.appendChild controls (slider-row! :liquidez "Liquidez"))
       (.appendChild controls (slider-row! :retorno "Retorno"))
